@@ -1,4 +1,4 @@
-# IDS568 Final Project: Monitoring, Governance & Reflection
+# IDS568 Final Project
 ---
 
 ## System Overview
