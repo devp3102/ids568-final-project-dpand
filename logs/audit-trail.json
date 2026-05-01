@@ -1,0 +1,186 @@
+{
+  "audit_trail_version": "1.0",
+  "system": "RAG-LLM Query Assistant",
+  "created": "2026-04-01T09:00:00Z",
+  "hash_chain_algorithm": "sha256",
+  "events": [
+    {
+      "event_id": "EVT-001",
+      "event_type": "DATA_INGESTED",
+      "timestamp": "2026-04-01T09:00:00Z",
+      "actor": "data-engineer",
+      "resource_id": "knowledge-base-v1",
+      "action": "initial_ingestion",
+      "details": {
+        "document_count": 8,
+        "total_chunks": 312,
+        "embedding_model": "all-MiniLM-L6-v2",
+        "chunk_size_tokens": 512,
+        "chunk_overlap_tokens": 64,
+        "data_hash": "sha256:a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2"
+      },
+      "parent_event_id": null,
+      "prev_hash": "0000000000000000000000000000000000000000000000000000000000000000",
+      "event_hash": "sha256:0a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1"
+    },
+    {
+      "event_id": "EVT-002",
+      "event_type": "MODEL_DEPLOYED",
+      "timestamp": "2026-04-01T10:30:00Z",
+      "actor": "ml-engineer",
+      "resource_id": "rag-llm-service-v1.0.0",
+      "action": "production_deployment",
+      "details": {
+        "model_version": "v1.0.0",
+        "llm_provider": "Ollama (local)",
+        "llm_model": "mistral:7b-instruct",
+        "retriever": "FAISS IndexFlatIP",
+        "top_k": 3,
+        "temperature": 0.1,
+        "serving_framework": "FastAPI 0.111.0",
+        "git_commit": "48334fd",
+        "docker_image": "rag-llm-service:v1.0.0",
+        "deployment_environment": "production"
+      },
+      "parent_event_id": "EVT-001",
+      "prev_hash": "sha256:0a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1",
+      "event_hash": "sha256:1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2"
+    },
+    {
+      "event_id": "EVT-003",
+      "event_type": "CONFIG_CHANGED",
+      "timestamp": "2026-04-08T14:15:00Z",
+      "actor": "ml-engineer",
+      "resource_id": "rag-llm-service-v1.0.0",
+      "action": "prometheus_monitoring_enabled",
+      "details": {
+        "change": "Added Prometheus metrics instrumentation",
+        "metrics_added": [
+          "rag_requests_total",
+          "rag_request_latency_seconds",
+          "llm_time_to_first_token_seconds",
+          "llm_tokens_total",
+          "llm_cache_hits_total",
+          "rag_retrieval_latency_seconds",
+          "rag_retrieval_result_count",
+          "rag_retrieval_similarity_score"
+        ],
+        "grafana_dashboard_version": "v1",
+        "prometheus_scrape_interval_s": 10
+      },
+      "parent_event_id": "EVT-002",
+      "prev_hash": "sha256:1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2",
+      "event_hash": "sha256:2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3"
+    },
+    {
+      "event_id": "EVT-004",
+      "event_type": "MONITORING_EVENT",
+      "timestamp": "2026-04-15T09:22:00Z",
+      "actor": "automated-monitor",
+      "resource_id": "rag-llm-service-v1.0.0",
+      "action": "drift_alert_triggered",
+      "details": {
+        "alert_name": "RetrievalScoreDriftWarning",
+        "severity": "warning",
+        "triggered_metric": "rag_retrieval_similarity_score",
+        "psi_value": 0.1089,
+        "threshold": 0.10,
+        "week_window": "Week 3",
+        "action_taken": "Notified data-engineer for KB review",
+        "resolved": false
+      },
+      "parent_event_id": "EVT-003",
+      "prev_hash": "sha256:2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3",
+      "event_hash": "sha256:3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3d4"
+    },
+    {
+      "event_id": "EVT-005",
+      "event_type": "KNOWLEDGE_BASE_UPDATED",
+      "timestamp": "2026-04-17T11:00:00Z",
+      "actor": "data-engineer",
+      "resource_id": "knowledge-base-v2",
+      "action": "kb_refresh_triggered_by_drift_alert",
+      "details": {
+        "trigger_event_id": "EVT-004",
+        "documents_added": 3,
+        "documents_removed": 0,
+        "documents_re_embedded": 8,
+        "new_total_chunks": 387,
+        "data_hash": "sha256:b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3",
+        "faiss_index_rebuilt": true,
+        "post_refresh_psi": 0.041
+      },
+      "parent_event_id": "EVT-004",
+      "prev_hash": "sha256:3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3d4",
+      "event_hash": "sha256:4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3d4e5"
+    },
+    {
+      "event_id": "EVT-006",
+      "event_type": "PROMPT_TEMPLATE_CHANGED",
+      "timestamp": "2026-04-20T15:45:00Z",
+      "actor": "ml-engineer",
+      "resource_id": "rag-llm-service-v1.1.0",
+      "action": "prompt_template_updated",
+      "details": {
+        "previous_template_version": "v1.0",
+        "new_template_version": "v1.1",
+        "change_reason": "Added citation format instruction to reduce hallucination surface",
+        "approval_by": "team-lead",
+        "approved_at": "2026-04-20T14:00:00Z",
+        "rollback_plan": "Revert to v1.0 template via config flag if hallucination_rate increases > 2x baseline"
+      },
+      "parent_event_id": "EVT-005",
+      "prev_hash": "sha256:4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3d4e5",
+      "event_hash": "sha256:5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3d4e5f6"
+    },
+    {
+      "event_id": "EVT-007",
+      "event_type": "MODEL_DEPLOYED",
+      "timestamp": "2026-04-25T09:00:00Z",
+      "actor": "ml-engineer",
+      "resource_id": "rag-llm-service-v1.1.0",
+      "action": "incremental_rollout",
+      "details": {
+        "previous_version": "v1.0.0",
+        "new_version": "v1.1.0",
+        "rollout_strategy": "canary (10% → 50% → 100% over 3 days)",
+        "changes": [
+          "Updated prompt template to v1.1",
+          "Added Bonferroni-corrected A/B test framework",
+          "KB refreshed to v2"
+        ],
+        "approval_by": "team-lead",
+        "approved_at": "2026-04-24T16:00:00Z",
+        "git_commit": "a2b3c4d",
+        "ab_test_id": "rag_topk_optimization_v1"
+      },
+      "parent_event_id": "EVT-006",
+      "prev_hash": "sha256:5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3d4e5f6",
+      "event_hash": "sha256:6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3d4e5f6a7"
+    },
+    {
+      "event_id": "EVT-008",
+      "event_type": "MONITORING_EVENT",
+      "timestamp": "2026-04-30T10:00:00Z",
+      "actor": "automated-monitor",
+      "resource_id": "rag-llm-service-v1.1.0",
+      "action": "drift_analysis_week6",
+      "details": {
+        "week_window": "Week 6",
+        "psi_results": {
+          "retrieval_similarity_score": 0.2501,
+          "query_length_tokens": 0.2538,
+          "response_length_tokens": 0.1366,
+          "retrieval_result_count": 0.0242
+        },
+        "action_triggered": "KB_REINGESTION_SCHEDULED",
+        "scheduled_date": "2026-05-05",
+        "estimated_completion_impact_pct": 3.8,
+        "alert_fired": true
+      },
+      "parent_event_id": "EVT-007",
+      "prev_hash": "sha256:6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3d4e5f6a7",
+      "event_hash": "sha256:7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3d4e5f6a7b8"
+    }
+  ]
+}
